@@ -1,0 +1,37 @@
+server:
+  servlet:
+    context-path: /
+  tomcat:
+    connection-timeout: 20000
+
+spring:
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      write-dates-as-timestamps: true
+  application:
+    name: oauth2-service
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 20480KB
+      max-request-size: 5242880KB
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 80
+      minimum-idle: 80
+      #检测连接泄露的时间 单位毫秒
+      leak-detection-threshold: 30000
+      #连接最大存活时间 单位毫秒
+      max-lifetime: 900000
+
+
+#日志
+logging:
+  level:
+    org.springframework.boot.autoconfigure: ERROR
+
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.oauth2.model.entity

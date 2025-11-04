@@ -1,0 +1,71 @@
+server:
+  port: 8080
+
+##开发环境
+spring:
+  datasource:
+    #    内网部署使用
+    url: jdbc:mysql://localhost:3306/oauth2?useunicode=true&serverTimezone=UTC&useSSL=true
+    username: admin
+    password: 123456
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: 123456
+      database: 1
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId:
+            clientSecret:
+            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - profile
+          apple:
+            clientId:
+            clientSecret:
+            authorizationGrantType: authorization_code
+            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - name
+              - email
+            clientName: Apple
+            clientAuthenticationMethod: client_secret_post
+        provider:
+          apple:
+            authorizationUri: https://appleid.apple.com/auth/authorize?response_mode=form_post&response_type=code+id_token
+            tokenUri: https://appleid.apple.com/auth/token
+            jwkSetUri: https://appleid.apple.com/auth/keys
+            userNameAttribute: sub
+
+app:
+  auth:
+    tokenSecret: 5V6lU0p0ldD8WMjfbHkY6rLXdsQ6z6NoyU4aePOJDxk/GzaNR5QbXnMuJZRQGj5LhMXZEin2vYB3a4jdK488Og==
+    tokenExpirationMsec: 864000000
+  apple:
+    private-key: 苹果私钥.p8文件
+    key-id: kid
+    team-id: team id
+    client-id: client id
+    audience: https://appleid.apple.com
+  cors:
+    allowedOrigins: http://localhost:8890,http://localhost:8080
+  oauth2:
+    # After successfully authenticating with the OAuth2 Provider,
+    # we'll be generating an auth token for the user and sending the token to the
+    # redirectUri mentioned by the client in the /oauth2/authorize request.
+    # We're not using cookies because they won't work well in mobile clients.
+    # APP端可自定义协议跳转，比如：myiosapp://oauth2/redirect，服务端可直接重定向到APP指定页面
+    authorizedRedirectUris:
+      - http://localhost:8890/oauth2/redirect
+      - myandroidapp://oauth2/redirect
+      - myiosapp://oauth2/redirect
+
+#日志
+logging:
+  config: classpath:logback.xml
